@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>留言板</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('../image/2.avif');
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Navigation Bar Style */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: black;
+            padding: 15px 0;
+            z-index: 1000;
+            text-align: center;
+            animation: navbarFadeIn 1s ease-out;
+        }
+
+        .navbar a {
+            color: rgb(17, 107, 19);
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0 20px;
+            padding: 10px;
+            display: inline-block;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            transform: scale(1.1);
+            background-color: rgba(52, 152, 219, 0.7);
+            border-radius: 5px;
+        }
+
+        /* Message Board */
+        .message-container {
+            width: 80%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            overflow-y: auto;
+            max-height: 70vh;
+            animation: messageBoardFadeIn 1s ease-out;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .message h3 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .message p {
+            margin: 5px 0;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .message time {
+            display: block;
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        /* Keyframes for animation */
+        @keyframes navbarFadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes messageBoardFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .navbar a {
+                font-size: 16px;
+                margin: 0 10px;
+            }
+
+            .message-container {
+                width: 90%;
+                padding: 15px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 5px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#">个人信息</a>
+        <a href="allText.html">个人全部留言</a>
+        <a href="Main_interface.html">新建留言</a>
+        <a href="changePassword.html">修改密码</a>
+        <a href="#">我处理的</a>
+        <a href="#">发布留言历史记录</a>
+        <a href="#" onclick="logout()">退出</a>
+    </div>
+
+    <h1>留言板</h1>
+    <div class="message-container" id="messageContainer">
+        <!-- 留言内容将动态插入 -->
+    </div>
+
+    <script>
+        // 获取留言数据
+        async function fetchMessages() {
+            try {
+                const response = await fetch('../php/allText.php'); // 后端接口地址
+                const data = await response.json();
+
+                if (data.status === "success") {
+                    displayMessages(data.messages);
+                } else {
+                    console.error("获取留言失败:", data.message);
+                    document.getElementById('messageContainer').innerHTML = "<p>暂无留言</p>";
+                }
+            } catch (error) {
+                console.error("请求出错:", error);
+                document.getElementById('messageContainer').innerHTML = "<p>无法加载留言，请稍后再试。</p>";
+            }
+        }
+
+        // 动态显示留言
+        function displayMessages(messages) {
+            const container = document.getElementById('messageContainer');
+            container.innerHTML = ""; // 清空容器
+
+            if (messages.length === 0) {
+                container.innerHTML = "<p>暂无留言</p>";
+                return;
+            }
+
+            messages.forEach(msg => {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+
+                // 创建一个变量用于接收每个留言的时间
+                const messageTime = msg.created_at;
+
+                messageElement.innerHTML = `
+                    <h3>用户名：${msg.username}</h3>
+                    <p>内容：${msg.content}</p>
+                    <time>发布时间：${messageTime}</time>
+                    <div class="button-container">
+                        <!-- 编辑按钮 -->
+                        <form action="editContent.html" method="POST">
+                            <input type="hidden" name="id" value="${msg.id}">
+                            <input type="hidden" name="created_at" value="${messageTime}">
+                            <button type="submit">编辑</button>
+                        </form>
+                        <!-- 删除按钮 -->
+                        <form action="../php/deleteContent.php" method="POST">
+                            <input type="hidden" name="id" value="${msg.id}">
+                            <input type="hidden" name="created_at" value="${messageTime}">
+                            <button type="submit">删除</button>
+                        </form>
+                    </div>
+                `;
+
+                container.appendChild(messageElement);
+            });
+        }
+
+        // 页面加载完成后获取留言
+        window.onload = fetchMessages;
+
+        // 退出登录
+        function logout() {
+            var confirmAction = confirm("确定要退出吗？");
+            if (confirmAction) {
+                window.location.href = "login.html"; // 替换为你的登录页面URL
+            }
+        }
+    </script>
+</body>
+</html>

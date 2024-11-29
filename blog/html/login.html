@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录页面</title>
+    <style>
+        body {
+            background-image: url('../image/2.avif');
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* 为登录框添加显示过渡动画 */
+        .login {
+            background-color: rgba(255, 255, 255, 0.85); /* 半透明白色背景 */
+            padding: 30px;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: fadeInUp 1s ease-out; /* 应用动画 */
+        }
+
+        /* 登录框标题 */
+        .login h2 {
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        /* 输入框样式 */
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 35px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #4a90e2;
+            outline: none;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+        }
+
+        /* 按钮样式 */
+        .button {
+            width: 100%;
+            height: 40px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4a90e2;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #357abd;
+        }
+
+        /* 忘记密码链接样式 */
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .forgot-password a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        /* 社交登录部分 */
+        .social-login {
+            margin-top: 20px;
+        }
+
+        .social-login p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f1f1f1;
+            text-align: center;
+            line-height: 40px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.1);
+            background-color: #ddd;
+        }
+
+        .social-icons a img {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+
+        /* 设置动画效果：登录框从下方滑入并淡入显示 */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px); /* 初始位置偏下 */
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0); /* 最终位置 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login">
+        <h2>登录</h2>
+        <form id="login-form" action="../php/loginWelcome.php" method="post">
+            <div class="input-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="forgot-password">
+                <a href="ForgotPassword.html">忘记密码？</a>
+            </div>
+            <button type="submit" class="button">登录</button>
+            <button type="button" class="button" style="background-color: #aaa;" onclick="window.location.href='register.html'">注册</button>
+        </form>
+        <div class="social-login">
+            <p>或使用以下方式登录</p>
+            <div class="social-icons">
+                <a href="#" title="微信登录">
+                    <img src="../image/wei.png" alt="微信图标">
+                </a>
+                <a href="https://im.qq.com/index/" title="QQ登录">
+                    <img src="../image/th (2).jpg" alt="QQ图标">
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
